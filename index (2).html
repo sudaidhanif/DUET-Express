@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DUET Express - Transport &amp; Point Service</title>
+<style>
+:root{--n:#0b1f3a;--b:#2563eb;--bg:#f1f5fb;--t:#1b2433;--m:#64748b;--ok:#16a34a;--er:#dc2626;--bd:#e2e8f0}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--t)}button,input{font:inherit}button{cursor:pointer}
+.shell{display:flex;min-height:100vh}aside{width:250px;background:var(--n);color:#cbd5e1;padding:16px 12px;position:fixed;inset:0 auto 0 0;overflow:auto;transition:transform .2s;z-index:20}
+.shell.co aside{transform:translateX(-100%)}.main{flex:1;margin-left:250px;transition:margin-left .2s;min-width:0}.shell.co .main{margin-left:0}
+.lg{color:#fff;font-weight:700;font-size:19px;padding:4px 10px 2px}.lg small{display:block;font-weight:400;font-size:11px;color:#93c5fd}
+aside h6{margin:18px 10px 6px;font-size:11px;letter-spacing:1.2px;color:#7c93b8}
+aside button{display:flex;gap:10px;width:100%;background:none;border:0;color:inherit;text-align:left;padding:9px 12px;border-radius:9px;transition:background .15s}
+aside button:hover{background:#17335c}aside button.on{background:var(--b);color:#fff}aside button i{font-style:normal;width:18px;text-align:center}
+header{display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--bd);padding:10px 20px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:19px}header small{color:var(--m);font-size:11px;letter-spacing:1px}.hb{background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px}
+.usr{margin-left:auto;background:#e8eefb;border-radius:99px;padding:5px 14px;font-size:13px;color:var(--n)}
+section{padding:20px;max-width:1000px}.ov{display:none}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px #0001}.ban{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.grow{flex:1}.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.big,.fare{font-weight:700;color:var(--n)}.big{font-size:24px}h2,h3{margin:4px 0 10px}.m{color:var(--m)}
+input{padding:9px 11px;border:1px solid #cbd5e1;border-radius:8px;width:100%;background:#fff}label{display:block;font-size:13px;color:var(--m);margin:8px 0 3px}
+.btn{background:var(--b);color:#fff;border:0;border-radius:8px;padding:9px 16px;transition:filter .15s}.btn:hover{filter:brightness(1.1)}.btn.sec{background:#e2e8f0;color:var(--t)}.btn.red{background:var(--er)}.btn:disabled{opacity:.5;cursor:not-allowed}.btn.w{width:100%}.sm{padding:5px 10px;font-size:13px}
+.tag{padding:2px 9px;border-radius:99px;font-size:12px;color:#fff}.tag.a{background:var(--ok)}.tag.c{background:var(--er)}
+.steps{display:flex;gap:4px;margin-bottom:18px;overflow-x:auto}.st{flex:1;min-width:76px;text-align:center;font-size:11px;color:var(--m)}.st b{display:grid;place-items:center;width:28px;height:28px;margin:0 auto 3px;border-radius:50%;background:#e2e8f0}
+.st.on{color:var(--n);font-weight:600}.st.on b{background:var(--b);color:#fff}.st.dn b{background:var(--ok);color:#fff}
+.bus{display:inline-grid;grid-template-columns:repeat(2,44px) 26px repeat(2,44px);gap:7px;background:#e8eef9;padding:16px;border-radius:14px}
+.seat{height:40px;border-radius:8px;border:1px solid #86efac;background:#dcfce7;color:#166534}.seat.x{background:#fecaca;border-color:#fca5a5;color:#991b1b;cursor:not-allowed}.seat.s{background:var(--b);border-color:var(--b);color:#fff}
+.lgd span{margin-right:14px;font-size:13px}.lgd i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px;border-bottom:1px solid var(--bd);text-align:left}th{color:var(--m)}.tw{overflow-x:auto}
+.bar{background:#e2e8f0;border-radius:6px;height:10px;min-width:80px}.bar i{display:block;background:var(--b);height:10px;border-radius:6px}.pill{padding:6px 14px;border-radius:99px;border:1px solid var(--bd);background:#fff}.pill.on{background:var(--n);color:#fff}
+.auth{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}.auth .hero{background:var(--n);color:#fff;padding:60px 44px;display:flex;flex-direction:column;justify-content:center}.hero h1{font-size:42px;margin:6px 0}.hero small{color:#93c5fd}.hero p{color:#bfdbfe}
+.fm{padding:40px;display:flex;flex-direction:column;justify-content:center;max-width:460px;width:100%;margin:auto}.tabs{display:flex;gap:6px;margin-bottom:6px}.tabs button{flex:1;padding:8px;border:0;border-bottom:3px solid var(--bd);background:none}.tabs .on{border-color:var(--b);color:var(--b);font-weight:600}
+.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;border:0;background:none}.c{text-align:center}
+.ticket{border:2px dashed var(--n);background:#fff;border-radius:14px;padding:20px;max-width:520px}.ticket h2{color:var(--n)}.ticket dl{display:grid;grid-template-columns:120px 1fr;gap:4px 10px;margin:0}.ticket dt{color:var(--m)}.ticket dd{margin:0;font-weight:600}
+.cb{position:relative}.cl{display:none;position:absolute;left:0;right:0;top:100%;z-index:8;background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 20px #0002;max-height:220px;overflow:auto;margin-top:4px}.cb.open .cl{display:block}.cl button{display:block;width:100%;text-align:left;background:none;border:0;padding:11px 12px;color:var(--t)}.cl button:hover{background:#eef3ff}.cl button:disabled{color:#94a3b8;cursor:not-allowed}.cl small{color:#94a3b8}.empty{padding:12px;color:var(--m)}.chip{display:flex;justify-content:space-between;align-items:center;border:1px solid #cbd5e1;border-radius:8px;padding:5px 6px 5px 11px;background:#eef3ff;min-height:40px}.chip button{border:0;background:none;font-size:16px;padding:4px 8px;color:var(--m)}
+footer{padding:16px 20px;color:var(--m);font-size:12px}#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:99;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:92vw}#toast div{background:var(--n);color:#fff;padding:10px 18px;border-radius:10px}#toast .e{background:var(--er)}#toast .o{background:var(--ok)}
+@media(max-width:800px){aside{transform:translateX(-100%)}.shell.open aside{transform:none}.main,.shell.co .main{margin-left:0}.shell.open .ov{display:block;position:fixed;inset:0;background:#0006;z-index:15}.auth{grid-template-columns:1fr}.auth .hero{padding:30px 24px}.hero h1{font-size:32px}.fm{padding:20px}}
+@media print{body *{visibility:hidden}#ticket,#ticket *{visibility:visible}#ticket{position:absolute;left:0;top:0;width:100%;border-color:#000}}
+</style></head><body><div id="app"></div><div id="toast"></div>
+<script>
+/* DUET Express - web version of the C++ Bus Reservation System (main.cpp).
+   Function names that mirror the C++ program: isValidName, isValidPhone, isValidTime,
+   createBooking, applyCancellation, countActive..., showStatistics (see About page).
+   Data lives in localStorage (browser-only demo, NOT secure production storage). */
+const LIM={TRIPS:10,SEATS:20,BOOKINGS:300,TRIPID:9999,FARE:100000};
+const ADMIN_H="4657503786230626"; // obfuscated hash of the demo admin password (not real security)
+const H=s=>{let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return String(4294967296*(2097151&b)+(a>>>0))};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toLocaleString('en-PK',{minimumFractionDigits:2,maximumFractionDigits:2});
+const seed=()=>({trips:[[101,'Blue Line','Karachi','Hyderabad','08:00',1200,20],[102,'Green Star','Karachi','Lahore','14:30',4500,20],[103,'Royal Coach','Lahore','Islamabad','09:15',1800,16],[104,'City Link','Islamabad','Peshawar','17:00',1500,12],[105,'Night Rider','Karachi','Lahore','21:00',4800,20]].map(a=>({id:a[0],bus:a[1],from:a[2],to:a[3],time:a[4],fare:a[5],seats:a[6]})),bookings:[],users:[],nb:1001,nu:1});
+function load(){try{const d=JSON.parse(localStorage.getItem('busly_v1'));if(d&&Array.isArray(d.trips)&&Array.isArray(d.bookings)&&Array.isArray(d.users)&&d.nb&&d.nu)return d}catch(e){}return self.__cur||seed()}
+const save=()=>{try{localStorage.setItem('busly_v1',JSON.stringify(db))}catch(e){}self.__cur=db};
+const sess=()=>{try{return JSON.parse(sessionStorage.getItem('busly_s'))}catch(e){return null}};
+let db=load(),V='home',T=null,SEL=null,PEND=null,TK=null,HF='all',AT='trips',EDIT=null,F={o:'',d:'',b:''},tries=0;
+function toast(t,k){$('#toast').innerHTML='';const d=document.createElement('div');d.className=k||'e';d.textContent=t;$('#toast').appendChild(d);setTimeout(()=>d.remove(),3500)}
+/* ---- rules from main.cpp ---- */
+const isValidName=n=>n.length>=2&&n.length<=30&&/[A-Za-z]/.test(n);
+const isValidPhone=p=>/^\d{11}$/.test(p);
+const isValidTime=t=>/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
+const trip=id=>db.trips.find(t=>t.id===id);
+const activeOf=id=>db.bookings.filter(b=>b.tripId===id&&b.active);
+const free=t=>t.seats-activeOf(t.id).length;
+const taken=(t,n)=>activeOf(t.id).some(b=>b.seat===n);
+function createBooking(t,seat,name,phone,uid){db=load();t=t&&trip(t.id); // re-read storage first so a second tab cannot overwrite newer data
+  // the only place a booking is made
+  if(db.bookings.length>=LIM.BOOKINGS||!t||seat<1||seat>t.seats||taken(t,seat))return null;
+  const b={id:db.nb++,tripId:t.id,seat,name,phone,fare:t.fare,active:true,uid};db.bookings.push(b);save();return b}
+function applyCancellation(b){db=load();b=b&&db.bookings.find(x=>x.id===b.id);if(!b||!b.active)return false;b.active=false;save();return true} // record stays, ID never reused
+
+function doReg(){db=load();const n=$('#n').value.trim(),ph=$('#ph').value.trim(),e=$('#e').value.trim().toLowerCase(),p=$('#p').value;
+  if(!isValidName(n))return toast('Name must be 2-30 characters with a letter.');if(!isValidPhone(ph))return toast('Phone must be 11 digits.');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return toast('Enter a valid email.');if(p.length<6)return toast('Password needs at least 6 characters.');
+  if(p!==$('#p2').value)return toast('Passwords do not match.');if(db.users.some(u=>u.email===e))return toast('That email is already registered.');
+  const u={id:'U'+db.nu++,name:n,phone:ph,email:e,pw:H(p)};db.users.push(u);save();sessionStorage.setItem('busly_s',JSON.stringify({role:'user',id:u.id}));toast('Account created.','o');go('dash')}
+function doLogin(){db=load();const u=db.users.find(u=>u.email===$('#e').value.trim().toLowerCase());
+  if(!u||u.pw!==H($('#p').value))return toast('Incorrect email or password.');sessionStorage.setItem('busly_s',JSON.stringify({role:'user',id:u.id}));toast('Welcome, '+u.name,'o');go('dash')}
+function saveProfile(){db=load();const u=db.users.find(u=>u.id===sess().id),n=$('#n').value.trim(),ph=$('#ph').value.trim(),p=$('#p').value;
+  if(!isValidName(n))return toast('Invalid name.');if(!isValidPhone(ph))return toast('Phone must be 11 digits.');if(p&&p.length<6)return toast('Password needs at least 6 characters.');
+  u.name=n;u.phone=ph;if(p)u.pw=H(p);save();toast('Profile updated.','o')}
+function doAdmin(){if(tries>=3)return toast('Access denied. Reload the page to try again.');
+  if(H($('#p').value.trim())===ADMIN_H){tries=0;sessionStorage.setItem('busly_s','{"role":"admin"}');toast('Login successful.','o');return go('admin')}
+  tries++;toast(tries>=3?'Incorrect password. Access denied.':'Incorrect password. '+(3-tries)+' attempt(s) left.')}
+function saveTrip(){db=load();const t=EDIT&&trip(EDIT),id=+$('#tid').value,bus=$('#tb').value.trim(),f=$('#tf').value.trim(),to=$('#tt').value.trim(),tm=$('#tm').value.trim(),fare=+$('#tr').value,seats=+$('#ts').value;
+  if(!t&&db.trips.length>=LIM.TRIPS)return toast('Trip storage is full (10 trips).');
+  if(!Number.isInteger(id)||id<1||id>LIM.TRIPID)return toast('Trip ID must be 1-9999.');
+  if(db.trips.some(x=>x.id===id&&x!==t))return toast('Trip ID already exists.');
+  if(!bus||bus.length>12)return toast('Bus name: 1-12 characters.');
+  if(!f||!to||f.length>11||to.length>11)return toast('City names: 1-11 characters.');
+  if(f.toLowerCase()===to.toLowerCase())return toast('Origin and destination must be different.');
+  if(!isValidTime(tm))return toast('Time must be HH:MM, 00:00-23:59.');
+  if(!(fare>=0.01&&fare<=LIM.FARE))return toast('Fare must be 0.01 to 100000.');
+  if(!Number.isInteger(seats)||seats<1||seats>LIM.SEATS)return toast('Seats must be 1-20.');
+  const o={id,bus,from:f,to,time:tm,fare,seats};if(t)Object.assign(t,o);else db.trips.push(o);
+  save();toast('Trip saved.','o');go('atrips')}
+function resetDemo(){if(confirm('Delete ALL demo data (trips, bookings, accounts) and restore the 5 sample trips?')){db=seed();save();sessionStorage.removeItem('busly_s');toast('Demo data reset.','o');go('login')}}
+function cancelB(id){const b=db.bookings.find(x=>x.id===id),s=sess();
+  if(!b||b.uid!==s.id)return toast('Not allowed.');if(!confirm('Cancel booking '+id+'? Its seat becomes available again.'))return;
+  applyCancellation(b)?toast('Booking '+id+' cancelled. Seat '+b.seat+' is available again.','o'):toast('Already cancelled.');render()}
+function vMy(){const s=sess(),L=db.bookings.filter(b=>b.uid===s.id&&(HF==='all'||(HF==='active')===b.active));
+  return `<h2>My Bookings</h2><p class="row">${['all','active','cancelled'].map(f=>`<button class="pill ${HF===f?'on':''}" onclick="HF='${f}';render()">${f[0].toUpperCase()+f.slice(1)}</button>`).join('')}</p>`+
+  (L.map(b=>{const t=trip(b.tripId)||{};return `<div class="card row"><div class="grow"><b>#${b.id}</b> <span class="tag ${b.active?'a':'c'}">${b.active?'ACTIVE':'CANCELLED'}</span><br>${esc(t.from||'?')} → ${esc(t.to||'?')} · ${esc(t.bus||'')} · ${t.time||''}<br><span class="m">Seat ${b.seat} · ${esc(b.name)} · PKR ${fmt(b.fare)}</span></div><button class="btn sm sec" onclick="go('ticket',${b.id})">View Ticket</button>${b.active?`<button class="btn sm red" onclick="cancelB(${b.id})">Cancel Booking</button>`:''}</div>`}).join('')||'<p class="card m">No bookings found.</p>')}
+function vProfile(){const s=sess(),u=db.users.find(u=>u.id===s.id);if(!u)return '';
+  return `<div class="card" style="max-width:440px;margin:auto"><h2>Profile</h2><p class="m">Account ${u.id} · ${esc(u.email)}</p><label>Full name</label><input id="n" value="${esc(u.name)}"><label>Phone</label><input id="ph" value="${esc(u.phone)}"><label>New password (leave empty to keep)</label><input id="p" type="password"><p><button class="btn" onclick="saveProfile()">Save Changes</button></p></div>`}
+function vEditor(){const t=EDIT&&trip(EDIT),L=t&&db.bookings.some(b=>b.tripId===t.id),d=t||{id:'',bus:'',from:'',to:'',time:'',fare:'',seats:''},lk=L?'disabled':'';
+  return `<div class="card" style="max-width:480px;margin:auto"><h2>${t?'Edit Trip '+t.id:'Add Trip'}</h2>${L?'<p class="m">This trip has booking records: ID, origin, destination and seats are locked (rule from main.cpp).</p>':''}
+<label>Trip ID (1-9999)</label><input id="tid" ${lk} value="${d.id}"><label>Bus name (max 12)</label><input id="tb" value="${esc(d.bus)}"><label>Origin (max 11)</label><input id="tf" ${lk} value="${esc(d.from)}"><label>Destination (max 11)</label><input id="tt" ${lk} value="${esc(d.to)}"><label>Departure HH:MM (24h)</label><input id="tm" value="${d.time}"><label>Fare PKR (0.01-100000)</label><input id="tr" value="${d.fare}"><label>Total seats (1-20)</label><input id="ts" ${lk} value="${d.seats}">
+<p class="row"><button class="btn" onclick="saveTrip()">Save Trip</button><button class="btn sec" onclick="go('atrips')">Cancel</button></p></div>`}
+function aTrips(){return `<p><button class="btn" onclick="go('editor')">Add Trip</button> <small class="m">${db.trips.length}/${LIM.TRIPS} trips</small></p><div class="card tw"><table><tr><th>ID</th><th>Bus</th><th>Route</th><th>Time</th><th>Fare</th><th>Free/Total</th><th></th></tr>${db.trips.map(t=>`<tr><td>${t.id}</td><td>${esc(t.bus)}</td><td>${esc(t.from)} → ${esc(t.to)}</td><td>${t.time}</td><td>${fmt(t.fare)}</td><td>${free(t)}/${t.seats}</td><td><button class="btn sm sec" onclick="go('editor',${t.id})">Edit Trip</button></td></tr>`).join('')}</table></div><button class="btn sec sm" onclick="resetDemo()">Reset demo data</button>`}
+function aBk(){return `<div class="card tw"><table><tr><th>ID</th><th>Status</th><th>Passenger</th><th>Phone</th><th>Trip</th><th>Seat</th><th>Fare</th><th></th></tr>${db.bookings.map(b=>`<tr><td>${b.id}</td><td>${b.active?'ACTIVE':'CANCELLED'}</td><td>${esc(b.name)}</td><td>${b.phone}</td><td>${b.tripId}</td><td>${b.seat}</td><td>${fmt(b.fare)}</td><td><button class="btn sm sec" onclick="go('ticket',${b.id})">Ticket</button></td></tr>`).join('')||'<tr><td colspan="8" class="m">No bookings have been made yet.</td></tr>'}</table><p class="m">Total stored booking records: ${db.bookings.length}</p></div>`}
+function aStats(){const A=db.bookings.filter(b=>b.active),rows=db.trips.map(t=>{const n=activeOf(t.id).length;return{t,n,p:t.seats?n*100/t.seats:0,r:activeOf(t.id).reduce((s,b)=>s+b.fare,0)}}),top=Math.max(0,...rows.map(r=>r.n)),k=(l,v)=>`<div class="card"><span class="m">${l}</span><div class="fare" style="font-size:22px">${v}</div></div>`;
+  return `<div class="grid3">${k('Total trips',db.trips.length)}${k('Booking records',db.bookings.length)}${k('Confirmed',A.length)}${k('Cancelled',db.bookings.length-A.length)}${k('Revenue (PKR)',fmt(A.reduce((s,b)=>s+b.fare,0)))}</div><div class="card tw"><table><tr><th>ID</th><th>Bus</th><th>Bookings</th><th>Occupancy</th><th></th><th>Revenue</th></tr>${rows.map(r=>`<tr><td>${r.t.id}</td><td>${esc(r.t.bus)}</td><td>${r.n}</td><td>${r.p.toFixed(1)}%</td><td><div class="bar"><i style="width:${r.p}%"></i></div></td><td>${fmt(r.r)}</td></tr>`).join('')}</table></div><div class="card">${top?`Most popular${rows.filter(r=>r.n===top).length>1?' (tie)':''}: ${rows.filter(r=>r.n===top).map(r=>r.t.id+' ('+esc(r.t.bus)+')').join(', ')} with ${top} confirmed booking(s)`:'Most popular trip: none yet (no confirmed bookings).'}</div>`}
+function vTicket(){const b=db.bookings.find(x=>x.id===TK),s=sess();
+  if(!b||!s||(s.role==='user'&&s.id!==b.uid))return '<p class="card">Ticket not available.</p>';
+  const t=trip(b.tripId)||{};
+  return `<div class="ticket" id="ticket"><h2>DUET Express · Transport Ticket</h2><dl><dt>Booking ID</dt><dd>${b.id}</dd><dt>Status</dt><dd>${b.active?'ACTIVE':'CANCELLED'}</dd><dt>Passenger</dt><dd>${esc(b.name)}</dd><dt>Phone</dt><dd>${b.phone}</dd><dt>Trip</dt><dd>${b.tripId} (${esc(t.bus||'n/a')})</dd><dt>Route</dt><dd>${esc(t.from||'n/a')} → ${esc(t.to||'n/a')}</dd><dt>Departure</dt><dd>${t.time||'n/a'}</dd><dt>Seat</dt><dd>${b.seat}</dd><dt>Fare (PKR)</dt><dd>${fmt(b.fare)}</dd></dl><p class="m">Academic demonstration only. Not a university-issued travel pass.</p></div>
+<p class="row"><button class="btn" onclick="print()">Print Ticket</button><button class="btn sec" onclick="go(sess().role==='admin'?'abk':'my')">Back</button></p>`}
+
+/* ---- DUET Express shell, steps and views ---- */
+let MODE='login',SB=false,CO=false;
+const MENU={user:[['MAIN',[['dash','▦','Dashboard'],['find','⌕','Find Transport'],['my','☰','My Bookings']]],['ACCOUNT',[['profile','☺','My Profile']]]],
+admin:[['OVERVIEW',[['admin','▦','Dashboard'],['stats','▲','Statistics']]],['MANAGEMENT',[['atrips','⛟','Manage Routes / Trips'],['abk','☷','Manage Bookings']]]]};
+const TITLE={dash:'Dashboard',find:'Find Transport',seats:'Choose Seat',details:'Passenger Details',review:'Review & Confirm',done:'Booking Confirmation',ticket:'Digital Ticket',my:'My Bookings',profile:'My Profile',admin:'Admin Dashboard',stats:'Statistics',atrips:'Manage Routes / Trips',abk:'Manage Bookings',editor:'Trip Editor'};
+const HL={seats:'find',details:'find',review:'find',done:'find',ticket:'my',editor:'atrips'};
+const STEPS=['Login','Search','Select Trip','Seat','Details','Review','Confirmed','Ticket'];
+const stepNo={find:()=>F.done?3:2,seats:()=>4,details:()=>5,review:()=>6,done:()=>7,ticket:()=>8};
+const stepper=n=>`<div class="steps">${STEPS.map((s,i)=>`<div class="st ${i+1<n?'dn':i+1===n?'on':''}"><b>${i+1<n?'✓':i+1}</b>${s}</div>`).join('')}</div>`;
+F.done=false;
+function go(v,x){const s=sess(),AD=['admin','stats','atrips','abk','editor'],PS=['dash','find','seats','details','review','done','my','profile'];
+ if(!s){if(v!=='alogin')v='login'}else if(s.role==='user'&&AD.includes(v))v='dash';else if(s.role==='admin'&&PS.includes(v))v='admin';
+ if(v==='seats'&&x){T=x;SEL=null;PEND=null}
+ if(v==='seats'&&!trip(T))v='find';
+ if(v==='details'&&!SEL)v='seats';
+ if(v==='review'&&!PEND)v='details';
+ if(v==='ticket'||v==='done'){TK=x||TK;if(!TK)v='find'}
+ if(v==='editor')EDIT=x||null;
+ V=v;SB=false;render();scrollTo(0,0)}
+function logout(){sessionStorage.removeItem('busly_s');SEL=PEND=T=null;toast('Logged out.','o');go('login')}
+function tg(){if(innerWidth<=800)SB=!SB;else CO=!CO;render()}
+function tp(id){const e=$('#'+id);e.type=e.type==='password'?'text':'password'}
+function vAuth(){const A=V==='alogin',R=!A&&MODE==='register';
+ const pw=(id,l)=>`<label>${l}</label><div class="pw"><input id="${id}" type="password"><button type="button" onclick="tp('${id}')" title="Show or hide">👁</button></div>`;let f;
+ if(A)f=`<h2>Admin sign in</h2><p class="m">Classroom demonstration only: browser-side login is not real security.</p>${pw('p','Password')}<p><button class="btn w" onclick="doAdmin()">Admin Login</button></p><p class="c"><a href="#" onclick="go('login');return false">← Passenger sign in</a></p>`;
+ else f=`<div class="tabs"><button class="${R?'':'on'}" onclick="MODE='login';render()">Login</button><button class="${R?'on':''}" onclick="MODE='register';render()">Register</button></div>`+(R?'<label>Full name</label><input id="n"><label>Phone (11 digits)</label><input id="ph">':'')+`<label>Email</label><input id="e" type="email">${pw('p','Password'+(R?' (min 6)':''))}`+(R?pw('p2','Confirm password'):'')+`<p><button class="btn w" onclick="${R?'doReg':'doLogin'}()">${R?'Create account':'Login'}</button></p><p class="c"><a href="#" onclick="go('alogin');return false">Admin sign in</a></p>`;
+ return `<div class="auth"><div class="hero"><small>Dawood University of Engineering and Technology (DUET)</small><h1>DUET Express</h1><h3>DUET Transport &amp; Point Service</h3><p>Your Route, Your Ride, Your Campus.</p></div><div class="fm"><div class="card">${f}</div><p class="m c">DUET Transport &amp; Point Service · Academic demonstration</p></div></div>`}
+const bkRow=b=>{const t=trip(b.tripId)||{};return `<div class="card row"><div class="grow"><b>#${b.id}</b> <span class="tag ${b.active?'a':'c'}">${b.active?'ACTIVE':'CANCELLED'}</span> ${esc(t.from||'?')} → ${esc(t.to||'?')} · Seat ${b.seat}</div><button class="btn sm sec" onclick="go('ticket',${b.id})">View Ticket</button></div>`};
+function vDash(){const s=sess(),u=db.users.find(x=>x.id===s.id)||{name:''},B=db.bookings.filter(b=>b.uid===s.id),a=B.filter(b=>b.active).length,k=(l,v)=>`<div class="card"><span class="m">${l}</span><div class="big">${v}</div></div>`;
+ return `<div class="card ban"><div class="grow"><h2>Welcome, ${esc(u.name)}</h2><span class="m">Dawood University of Engineering and Technology · DUET Transport &amp; Point Service</span></div><button class="btn" onclick="F.done=false;go('find')">Find Transport</button></div><div class="grid3">${k('Total bookings',B.length)}${k('Active',a)}${k('Cancelled',B.length-a)}</div><h3>Recent bookings</h3>${B.slice(-3).reverse().map(bkRow).join('')||'<p class="card m">No bookings yet. Use Find Transport to book your first seat.</p>'}<div class="card"><b>Transport information</b><p class="m">Scheduled sample trips, one seat per booking, phone numbers must be 11 digits. Cancelling frees the seat. Tickets are academic demonstrations, not university-issued passes.</p></div>`}
+const tripCard=t=>`<div class="card row"><div class="grow"><b>${esc(t.from)} → ${esc(t.to)}</b> <span class="m">· Trip ${t.id} · ${esc(t.bus)}</span><br><span class="m">Departs ${t.time} · ${free(t)} of ${t.seats} seats available</span></div><div class="fare">PKR ${fmt(t.fare)}</div><button class="btn" ${free(t)?'':'disabled'} onclick="go('seats',${t.id})">${free(t)?'Select Trip':'Full'}</button></div>`;
+/* ---- city search-and-select (Origin / Destination); cities come from the trips in storage ---- */
+const lc=x=>String(x).toLowerCase();
+const cities=()=>{const m={};db.trips.forEach(t=>[t.from,t.to].forEach(c=>{if(!m[lc(c)])m[lc(c)]=c}));return Object.values(m).sort((a,b)=>a.localeCompare(b))};
+const other=k=>k==='o'?F.d:F.o,CBL={o:'Origin',d:'Destination'};
+function cb(k){const v=F[k];
+ return `<div class="cb" id="cb${k}"><label>${CBL[k]}</label>`+(v?`<div class="chip"><b>${esc(v)}</b><button type="button" aria-label="Clear ${CBL[k]}" title="Clear" onclick="cbClear('${k}')">✕</button></div>`:`<input id="cs${k}" placeholder="Type or choose a city" autocomplete="off" aria-label="${CBL[k]} city" onfocus="cbOpen('${k}')" onclick="cbOpen('${k}')" oninput="cbList('${k}')" onkeydown="cbKey(event,'${k}')">`)+`<div class="cl" id="cl${k}"></div></div>`}
+function cbList(k){const i=$('#cs'+k),q=lc(i?i.value.trim():''),o=other(k),A=cities().filter(c=>lc(c).includes(q));
+ $('#cl'+k).innerHTML=A.length?A.map(c=>{const bad=o&&lc(o)===lc(c);return `<button type="button" data-c="${esc(c)}" ${bad?'disabled':''} onclick="cbPick('${k}',this.dataset.c)">${esc(c)}${bad?` <small>(already chosen as ${CBL[k==='o'?'d':'o']})</small>`:''}</button>`}).join(''):'<div class="empty">No cities found.</div>'}
+function cbOpen(k){document.querySelectorAll('.cb.open').forEach(e=>e.classList.remove('open'));const e=$('#cb'+k);if(e){e.classList.add('open');cbList(k)}}
+function cbKey(e,k){if(e.key==='Escape'){$('#cb'+k).classList.remove('open')}else if(e.key==='Enter'){const b=document.querySelector('#cl'+k+' button:not([disabled])');if(b)b.click();e.preventDefault()}}
+function cbPick(k,c){if(other(k)&&lc(other(k))===lc(c))return toast('Origin and destination must be different.');F[k]=c;$('#cb'+k).outerHTML=cb(k)}
+function cbClear(k){F[k]='';$('#cb'+k).outerHTML=cb(k);const i=$('#cs'+k);if(i)i.focus()}
+function doSearch(){for(const k of['o','d']){const i=$('#cs'+k);if(i&&i.value.trim()){const m=cities().find(c=>lc(c)===lc(i.value.trim()));if(!m)return toast('No city named "'+i.value.trim()+'". Choose '+CBL[k]+' from the list.');cbPick(k,m);if(F[k]!==m)return}}
+ F.b=$('#fb').value;F.done=true;render()}
+document.addEventListener('click',e=>{if(!e.target.closest('.cb'))document.querySelectorAll('.cb.open').forEach(x=>x.classList.remove('open'))});
+function vFind(){const ok=cities().map(lc);['o','d'].forEach(k=>{if(F[k]&&!ok.includes(lc(F[k])))F[k]=''});
+ const r=db.trips.filter(t=>(!F.o||lc(t.from)===lc(F.o))&&(!F.d||lc(t.to)===lc(F.d))&&lc(t.bus).includes(lc(F.b.trim())));
+ return `<div class="card"><div class="grid3">${cb('o')}${cb('d')}<div><label>Bus / Point name</label><input id="fb" value="${esc(F.b)}"></div></div><p class="row"><button class="btn" onclick="doSearch()">Search</button><button class="btn sec" onclick="F={o:'',d:'',b:'',done:false};render()">Clear Filters</button></p></div>`+(F.done?(r.map(tripCard).join('')||'<p class="card m">No trips found. Try different filters.</p>'):'<p class="m">Choose cities from the lists or type to search, then press Search.</p>')}
+function vSeats(){const t=trip(T);let g='';
+ for(let n=1;n<=t.seats;n++){if((n-1)%4===2)g+='<i></i>';const x=taken(t,n);g+=`<button class="seat ${x?'x':SEL===n?'s':''}" ${x?'disabled':''} onclick="SEL=${n};render()">${x?'XX':n}</button>`}
+ return `<div class="row" style="align-items:flex-start"><div><p class="m">Front of bus</p><div class="bus">${g}</div><p class="lgd"><span><i style="background:#86efac"></i>Available</span><span><i style="background:var(--b)"></i>Selected</span><span><i style="background:#f87171"></i>Booked</span></p></div>
+<div class="card grow" style="min-width:240px"><h3>Booking summary</h3><p>${esc(t.bus)} · Trip ${t.id}<br>${esc(t.from)} → ${esc(t.to)}<br>Departs ${t.time}<br>Seat: <b>${SEL||'not selected'}</b><br>Fare: <b>PKR ${fmt(t.fare)}</b></p><p class="row"><button class="btn sec" onclick="go('find')">Back</button><button class="btn" ${SEL?'':'disabled'} onclick="go('details')">Continue</button></p></div></div>`}
+function vDet(){const u=db.users.find(x=>x.id===sess().id)||{};
+ return `<div class="card" style="max-width:460px"><h3>Seat ${SEL} · Passenger details</h3><label>Full name (2-30 characters, at least one letter)</label><input id="pn" value="${esc(PEND?PEND.name:u.name||'')}"><label>Phone (exactly 11 digits)</label><input id="pp" value="${esc(PEND?PEND.phone:u.phone||'')}"><p class="row"><button class="btn sec" onclick="go('seats')">Back</button><button class="btn" onclick="cont()">Review Booking</button></p></div>`}
+function cont(){const n=$('#pn').value.trim(),p=$('#pp').value.trim();
+ if(!isValidName(n))return toast('Name must be 2-30 characters and contain at least one letter.');
+ if(!isValidPhone(p))return toast('Phone must be 11 digits, for example 03001234567.');
+ PEND={seat:SEL,name:n,phone:p};go('review')}
+function vRev(){const t=trip(T);
+ return `<div class="card" style="max-width:480px"><h3>Review your booking</h3><div class="ticket" style="border-style:solid"><dl><dt>Passenger</dt><dd>${esc(PEND.name)}</dd><dt>Phone</dt><dd>${PEND.phone}</dd><dt>Bus / Point</dt><dd>${esc(t.bus)} (Trip ${t.id})</dd><dt>Route</dt><dd>${esc(t.from)} → ${esc(t.to)}</dd><dt>Departure</dt><dd>${t.time}</dd><dt>Seat</dt><dd>${PEND.seat}</dd><dt>Fare</dt><dd>PKR ${fmt(t.fare)}</dd><dt>Booking ID</dt><dd class="m">Assigned on confirmation</dd></dl></div><p class="row"><button class="btn sec" onclick="go('details')">Back</button><button class="btn" onclick="confirmBooking()">Confirm Booking</button></p></div>`}
+function confirmBooking(){const t=trip(T);
+ if(db.bookings.length>=LIM.BOOKINGS)return toast('Booking storage is full. No more bookings can be made.');
+ const b=createBooking(t,PEND.seat,PEND.name,PEND.phone,sess().id);
+ if(!b){toast('Seat was taken. Nothing was saved.');SEL=null;PEND=null;return go('seats')}
+ SEL=null;PEND=null;toast('Booking confirmed.','o');go('done',b.id)}
+function vDone(){const b=db.bookings.find(x=>x.id===TK),t=b&&trip(b.tripId);if(!b||!t||b.uid!==sess().id)return '<p class="card">Nothing to show.</p>';
+ return `<div class="card" style="max-width:480px"><h2 style="color:var(--ok)">✓ Booking confirmed</h2><p>Booking ID <b>${b.id}</b><br>${esc(t.bus)} · ${esc(t.from)} → ${esc(t.to)} · ${t.time}<br>Seat ${b.seat} · ${esc(b.name)} · ${b.phone}<br>Total fare <b>PKR ${fmt(b.fare)}</b></p><p class="row"><button class="btn" onclick="go('ticket',${b.id})">View Ticket</button><button class="btn sec" onclick="go('ticket',${b.id});setTimeout(print,200)">Print Ticket</button><button class="btn sec" onclick="go('my')">My Bookings</button></p></div>`}
+function vAdm(){const A=db.bookings.filter(b=>b.active),k=(l,v)=>`<div class="card"><span class="m">${l}</span><div class="big">${v}</div></div>`;
+ return `<div class="grid3">${k('Trips',db.trips.length)}${k('Booking records',db.bookings.length)}${k('Active',A.length)}${k('Cancelled',db.bookings.length-A.length)}${k('Revenue (PKR)',fmt(A.reduce((s,b)=>s+b.fare,0)))}</div><h3>Seat availability</h3><div class="card">${db.trips.map(t=>`<div class="row" style="margin:6px 0"><span style="width:230px">${t.id} · ${esc(t.bus)} · ${esc(t.from)}→${esc(t.to)}</span><div class="bar grow"><i style="width:${(t.seats-free(t))*100/t.seats}%"></i></div><span class="m">${free(t)}/${t.seats} free</span></div>`).join('')}</div>`}
+function render(){const s=sess(),M={dash:vDash,find:vFind,seats:vSeats,details:vDet,review:vRev,done:vDone,ticket:vTicket,my:vMy,profile:vProfile,admin:vAdm,stats:aStats,atrips:aTrips,abk:aBk,editor:vEditor};
+ if(!s){V=V==='alogin'?'alogin':'login';$('#app').innerHTML=vAuth();return}
+ if(!M[V])V=s.role==='admin'?'admin':'dash';
+ let h;try{h=M[V]()}catch(e){h='<p class="card">Something went wrong. Use Reset demo data on the trips page.</p>'}
+ const u=s.role==='admin'?{name:'Administrator'}:(db.users.find(x=>x.id===s.id)||{name:'Passenger'}),on=HL[V]||V;
+ const menu=MENU[s.role].map(([g,L])=>`<h6>${g}</h6>`+L.map(([k,i,l])=>`<button class="${on===k?'on':''}" onclick="${k==='find'?"F.done=false;":''}go('${k}')"><i>${i}</i>${l}</button>`).join('')).join('')+(s.role==='admin'?'<h6>ACCOUNT</h6>':'')+`<button onclick="logout()"><i>⏻</i>Logout</button>`;
+ $('#app').innerHTML=`<div class="shell ${CO?'co':''} ${SB?'open':''}"><aside><div class="lg">DUET Express<small>Transport &amp; Point Service</small></div>${menu}</aside><div class="ov" onclick="SB=false;render()"></div><div class="main"><header><button class="hb" onclick="tg()" title="Menu">☰</button><div><small>DUET Express</small><h1>${TITLE[V]}</h1></div><div class="usr">${esc(u.name)} · ${s.role==='admin'?'Admin':'Passenger'}</div></header><section>${s.role==='user'&&stepNo[V]?stepper(stepNo[V]()):''}${h}</section><footer>Dawood University of Engineering and Technology (DUET) · DUET Transport &amp; Point Service · Your Route, Your Ride, Your Campus. · Academic demonstration, data stored in this browser only.</footer></div></div>`}
+V=sess()?(sess().role==='admin'?'admin':'dash'):'login';render();
+</script></body></html>
